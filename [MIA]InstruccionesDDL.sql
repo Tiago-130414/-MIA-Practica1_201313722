@@ -29,14 +29,6 @@ CREATE TABLE Persona(
     fecha DATE NOT NULL	
 );
 
-CREATE TABLE Ubicacion(
-	idUbicacion INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    direccion VARCHAR (80) NOT NULL,
-    fecha	DATETIME NOT NULL,
-    hora_llegada DATETIME NOT NULL,
-    hora_salida DATETIME NOT NULL	
-);
-
 CREATE TABLE Victima(
 	idVictima INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR (80) NOT NULL,
@@ -69,10 +61,18 @@ CREATE TABLE Tratamiento(
 
 CREATE TABLE RegistroVictima(
 	idRegistroVictima INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    idUbicacion INT NOT NULL,
     idVictima INT NOT NULL,
-    FOREIGN KEY (idUbicacion) REFERENCES Ubicacion (idUbicacion),
     FOREIGN KEY (idVictima) REFERENCES Victima (idVictima)
+);
+
+CREATE TABLE Ubicacion(
+	idUbicacion INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    direccion VARCHAR (80) NOT NULL,
+    fecha	DATETIME NOT NULL,
+    hora_llegada DATETIME NOT NULL,
+    hora_salida DATETIME NOT NULL,
+    idRegistroVictima INT NOT NULL,
+	FOREIGN KEY (idRegistroVictima) REFERENCES RegistroVictima (idRegistroVictima)
 );
 
 CREATE TABLE Hospital(
