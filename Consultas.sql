@@ -34,4 +34,23 @@ FROM Contacto
 GROUP BY Contacto.idVictima;
 */
 SELECT * FROM Temporal;
-/*DROP TABLE IF EXISTS Temporal;*/
+
+/*------------------------------ PARA CARGAR VALORES  ------------------------------*/
+-- INSERT INTO Persona(nombre,apellido,fecha_hora)
+-- SELECT DISTINCT Temporal.NOMBRE_ASOCIADO, Temporal.APELLIDO_ASOCIADO
+-- FROM Temporal
+-- WHERE Temporal.NOMBRE_ASOCIADO != "" AND Temporal.APELLIDO_ASOCIADO != "";
+
+-- INSERT INTO Tipo_Tratamiento(descripcion_tipo, efectividad_tipo_tratamiento)
+-- SELECT DISTINCT Temporal.Tratamiento , Temporal.EFECTIVIDAD
+-- FROM Temporal
+-- WHERE Temporal.Tratamiento != "" AND Temporal.EFECTIVIDAD != 0;
+/*
+SELECT DISTINCT Temporal.DIRECCION_HOSPITAL
+FROM Temporal
+WHERE Temporal.DIRECCION_HOSPITAL != "";
+*/
+/*INSERT INTO Victima (nombre,apellido,direccion_victima,estatusEnfermedad)
+SELECT DISTINCT Temporal.NOMBRE_VICTIMA,Temporal.APELLIDO_VICTIMA,Temporal.DIRECCION_VICTIMA,Temporal.ESTADO_VICTIMA
+FROM Temporal
+WHERE Temporal.NOMBRE_VICTIMA != "" AND Temporal.APELLIDO_VICTIMA != "" AND Temporal.DIRECCION_VICTIMA != "" AND Temporal.ESTADO_VICTIMA != "";*/

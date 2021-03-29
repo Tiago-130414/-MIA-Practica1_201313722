@@ -9,6 +9,7 @@ api.get("/",(req,res)=>{
 
 var mysql = require('mysql');
 var connection = mysql.createConnection({
+   multipleStatements: true,
    host: 'localhost',
    user: 'root',
    password: '130414',
@@ -74,7 +75,6 @@ api.get("/eliminarTemporal",(req,res)=>{
     }else{
         res.json({"Title":"Problema Al Eliminar Temporal"});
     }
-
 });
 
 //ELIMINAR MODELO
@@ -113,7 +113,8 @@ api.get("/cargarModelo",(req,res)=>{
 //cargar tabla temporal
 function crearTemporal(ruta){
     var errCrear = 1;
-    var crearT = "CREATE TABLE Temporal(\
+    var crearT = " DROP TABLE IF EXISTS Temporal;\
+        CREATE TABLE IF NOT EXISTS Temporal(\
         idTemporal INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\
         NOMBRE_VICTIMA VARCHAR (50) NOT NULL,\
         APELLIDO_VICTIMA VARCHAR (50) NOT NULL,\
@@ -150,7 +151,8 @@ function crearTemporal(ruta){
     if(errCrear == 0){
         return errCrear;
     }
-    var cargarDatos ="LOAD  DATA LOCAL INFILE \'"+ ruta +"\'\
+
+    var cargarDatos ="LOAD  DATA LOCAL INFILE '/home/santi/Documentos/ARCHIVOS1S2021/GRAND_VIRUS_EPICENTER.csv'\
     into table Temporal\
     character set utf8mb4\
     fields terminated by ';'\
@@ -179,7 +181,8 @@ function crearTemporal(ruta){
 
 //eliminar temporal
 function eliminarTemporal(){
-    var eliminarT = "DROP TABLE IF EXISTS Temporal;";
+    //elimina los datos de la tabla temporal
+    var eliminarT = "TRUNCATE TABLE Temporal;";
     var t = 1;
     connection.query(eliminarT, function (err, result) {
         if(err) t =  0
@@ -189,12 +192,23 @@ function eliminarTemporal(){
 
 //eliminar base de datos
 function eliminarModelo(){
-    var eliminarT = "DROP DATABASE IF EXISTS GVE;";
+    var eliminarT = "DROP TABLE IF EXISTS Contacto;\
+    DROP TABLE IF EXISTS Persona;\
+    DROP TABLE IF EXISTS Detalle_Contacto;\
+    DROP TABLE IF EXISTS Tratamiento;\
+    DROP TABLE IF EXISTS Tipo_Tratamiento;\
+    DROP TABLE IF EXISTS Hospital;\
+    DROP TABLE IF EXISTS Ubicacion_Hospital;\
+    DROP TABLE IF EXISTS Ubicacion;\
+    DROP TABLE IF EXISTS RegistroVictima;\
+    DROP TABLE IF EXISTS Victima;\
+    ";
     var t = 1;
     connection.query(eliminarT, function (err, result) {
         if(err) t =  0
     });
     return t;
 }
+
 
 module.exports = api;
