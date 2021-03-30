@@ -152,7 +152,7 @@ function crearTemporal(ruta){
         return errCrear;
     }
 
-    var cargarDatos ="LOAD  DATA LOCAL INFILE '/home/santi/Documentos/ARCHIVOS1S2021/GRAND_VIRUS_EPICENTER.csv'\
+    var cargarDatos ="LOAD  DATA LOCAL INFILE \'"+ruta+"\'\
     into table Temporal\
     character set utf8mb4\
     fields terminated by ';'\
