@@ -26,7 +26,8 @@ CREATE TABLE Victima(
     nombre VARCHAR (80) NOT NULL,
     apellido VARCHAR (80) NOT NULL,
     direccion_victima VARCHAR (80) NOT NULL,
-    estatusEnfermedad	VARCHAR (80) NOT NULL
+    estatusEnfermedad	VARCHAR (80) NOT NULL,
+    fecha_hora_fallecimiento DATETIME NULL
 );
 
 CREATE TABLE Contacto(

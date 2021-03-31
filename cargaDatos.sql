@@ -33,8 +33,8 @@ WHERE Temporal.DIRECCION_HOSPITAL != "";
 
 -- //PARA VICTIMAS DE HOSPITAL
 
-INSERT INTO Victima (nombre,apellido,direccion_victima,estatusEnfermedad)
-SELECT DISTINCT Temporal.NOMBRE_VICTIMA,Temporal.APELLIDO_VICTIMA,Temporal.DIRECCION_VICTIMA,Temporal.ESTADO_VICTIMA
+INSERT INTO Victima (nombre,apellido,direccion_victima,estatusEnfermedad,fecha_hora_fallecimiento)
+SELECT DISTINCT Temporal.NOMBRE_VICTIMA,Temporal.APELLIDO_VICTIMA,Temporal.DIRECCION_VICTIMA,Temporal.ESTADO_VICTIMA ,Temporal.FECHA_MUERTE
 FROM Temporal
 WHERE Temporal.NOMBRE_VICTIMA != "" AND Temporal.APELLIDO_VICTIMA != "" AND Temporal.DIRECCION_VICTIMA != "" AND Temporal.ESTADO_VICTIMA != "";
 -- 1000 Victimas
@@ -120,5 +120,16 @@ AND Temporal.DIRECCION_VICTIMA = DETALLE_CONTACTO.dirVictima AND Temporal.NOMBRE
 AND Temporal.APELLIDO_ASOCIADO = DETALLE_CONTACTO.apAsociado AND Temporal.CONTACTO_FISICO != "";
 */
 
--- SELECT * FROM Detalle_Contacto;
+/*
+SELECT DISTINCT Temporal.NOMBRE_VICTIMA,Temporal.NOMBRE_ASOCIADO,Temporal.CONTACTO_FISICO, Temporal.FECHA_INICIO_CONTACTO,
+Temporal.FECHA_FIN_CONTACTO, Temporal.FECHA_CONOCIO, Contacto.idContacto
+FROM Contacto
+INNER JOIN Victima on Contacto.idVictima = Victima.idVictima
+INNER JOIN Persona on Contacto.idPersona = Persona.idPersona
+INNER JOIN Temporal on Victima.nombre = Temporal.NOMBRE_VICTIMA AND Victima.apellido = Temporal.APELLIDO_VICTIMA
+AND Persona.nombre = Temporal.NOMBRE_ASOCIADO AND Persona.apellido = Temporal.APELLIDO_ASOCIADO
+WHERE Temporal.CONTACTO_FISICO != "" AND Temporal.FECHA_CONOCIO is not null
+;*/
 
+
+-- SELECT * FROM Detalle_Contacto;
