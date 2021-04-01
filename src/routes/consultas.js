@@ -19,47 +19,110 @@ var connection = mysql.createConnection({
 
 //CONSULTA 1
 api.get("/consulta1",(req,res)=>{
-    res.json({"Title":"Consulta 1"});
+    var consulta = consulta1();
+    connection.query(consulta, function (err, result) {
+        if(err){
+           res.end(JSON.stringify({"Error" : "Problema al ejecutar consulta 1"},null,2));
+        }else{
+           res.end(JSON.stringify(result,null,2));
+        }
+    });    
 });
 
 //CONSULTA 2
 api.get("/consulta2",(req,res)=>{
-    res.json({"Title":"Consulta 2"});
+    var consulta = consulta2();
+    connection.query(consulta, function (err, result) {
+        if(err){
+           res.end(JSON.stringify({"Error" : "Problema al ejecutar consulta 2"},null,2));
+        }else{
+           res.end(JSON.stringify(result,null,2));
+        }
+    });   
 });
 
 //CONSULTA 3
 api.get("/consulta3",(req,res)=>{
-    res.json({"Title":"Consulta 3"});
+    var consulta = consulta3();
+    connection.query(consulta, function (err, result) {
+        if(err){
+           res.end(JSON.stringify({"Error" : "Problema al ejecutar consulta 3"},null,2));
+        }else{
+           res.end(JSON.stringify(result,null,2));
+        }
+    });   
 });
 
 //CONSULTA 4
 api.get("/consulta4",(req,res)=>{
-    res.json({"Title":"Consulta 4"});
+    var consulta = consulta4();
+    connection.query(consulta, function (err, result) {
+        if(err){
+           res.end(JSON.stringify({"Error" : "Problema al ejecutar consulta 4"},null,2));
+        }else{
+           res.end(JSON.stringify(result,null,2));
+        }
+    });   
 });
 
 //CONSULTA 5
 api.get("/consulta5",(req,res)=>{
-    res.json({"Title":"Consulta 5"});
+    var consulta = consulta5();
+    connection.query(consulta, function (err, result) {
+        if(err){
+           res.end(JSON.stringify({"Error" : "Problema al ejecutar consulta 5"},null,2));
+        }else{
+           res.end(JSON.stringify(result,null,2));
+        }
+    });  
 });
 
 //CONSULTA 6
 api.get("/consulta6",(req,res)=>{
-    res.json({"Title":"Consulta 6"});
+    var consulta = consulta6();
+    connection.query(consulta, function (err, result) {
+        if(err){
+           res.end(JSON.stringify({"Error" : "Problema al ejecutar consulta 6"},null,2));
+        }else{
+           res.end(JSON.stringify(result,null,2));
+        }
+    });  
 });
 
 //CONSULTA 7
 api.get("/consulta7",(req,res)=>{
-    res.json({"Title":"Consulta 7"});
+    var consulta = consulta7();
+    connection.query(consulta, function (err, result) {
+        if(err){
+           res.end(JSON.stringify({"Error" : "Problema al ejecutar consulta 7"},null,2));
+        }else{
+           res.end(JSON.stringify(result,null,2));
+        }
+    });  
 });
 
 //CONSULTA 8
 api.get("/consulta8",(req,res)=>{
-    res.json({"Title":"Consulta 8"});
+    var consulta = consulta8();
+    connection.query(consulta, function (err, result) {
+        if(err){
+           res.end(JSON.stringify({"Error" : "Problema al ejecutar consulta 8"},null,2));
+        }else{
+           res.end(JSON.stringify(result,null,2));
+        }
+    });  
 });
 
 //CONSULTA 9
 api.get("/consulta9",(req,res)=>{
-    res.json({"Title":"Consulta 9"});
+    var consulta = consulta9();
+    connection.query(consulta, function (err, result) {
+        if(err){
+           res.end(JSON.stringify({"Error" : "Problema al ejecutar consulta 9"},null,2));
+        }else{
+           res.end(JSON.stringify(result,null,2));
+        }
+    });  
 });
 
 //CONSULTA 10
@@ -101,7 +164,23 @@ api.post("/cargarTemporal",(req,res)=>{
 
 //CARGAR MODELO
 api.get("/cargarModelo",(req,res)=>{
-    res.json({"Title":"Cargar Modelo"});
+    var cModelo = crearModelo();
+    connection.query(cModelo, function (err, result) {
+        if(err){
+            console.log("PROBLEMA AL CREAR MODELO");
+        }else{
+            console.log("MODELO CREADO EXITOSAMENTE");
+        }
+    });
+
+    var carga = cargarModelo();
+    connection.query(carga, function (err, result) {
+        if(err){
+           res.end(JSON.stringify({"Error" : "Problema al ejecutar carga de modelo"},null,2));
+        }else{
+           res.end(JSON.stringify({"Title" : "Carga de base de datos exitosa!"},null,2));
+        }
+    });
 });
 
 
@@ -172,7 +251,7 @@ function crearTemporal(ruta){
 
     connection.query(cargarDatos, function (err, result) {
         if (err) errCrear = 2;
-        console.log("Tabla Temporal Cargada");
+        console.log(result);
     });
     
     return errCrear;
@@ -192,15 +271,15 @@ function eliminarTemporal(){
 
 //eliminar base de datos
 function eliminarModelo(){
-    var eliminarT = "DROP TABLE IF EXISTS Contacto;\
+    var eliminarT = "DROP TABLE IF EXISTS Detalle_Contacto;\
+    DROP TABLE IF EXISTS Contacto;\
     DROP TABLE IF EXISTS Persona;\
-    DROP TABLE IF EXISTS Detalle_Contacto;\
-    DROP TABLE IF EXISTS Tratamiento;\
-    DROP TABLE IF EXISTS Tipo_Tratamiento;\
-    DROP TABLE IF EXISTS Hospital;\
-    DROP TABLE IF EXISTS Ubicacion_Hospital;\
     DROP TABLE IF EXISTS Ubicacion;\
     DROP TABLE IF EXISTS RegistroVictima;\
+    DROP TABLE IF EXISTS Hospital;\
+    DROP TABLE IF EXISTS Ubicacion_Hospital;\
+    DROP TABLE IF EXISTS Tratamiento;\
+    DROP TABLE IF EXISTS Tipo_Tratamiento;\
     DROP TABLE IF EXISTS Victima;\
     ";
     var t = 1;
@@ -208,6 +287,342 @@ function eliminarModelo(){
         if(err) t =  0
     });
     return t;
+}
+
+function crearModelo(){
+    
+    var consulta ="DROP TABLE IF EXISTS Detalle_Contacto;\
+    DROP TABLE IF EXISTS Contacto;\
+    DROP TABLE IF EXISTS Persona;\
+    DROP TABLE IF EXISTS Ubicacion;\
+    DROP TABLE IF EXISTS RegistroVictima;\
+    DROP TABLE IF EXISTS Hospital;\
+    DROP TABLE IF EXISTS Ubicacion_Hospital;\
+    DROP TABLE IF EXISTS Tratamiento;\
+    DROP TABLE IF EXISTS Tipo_Tratamiento;\
+    DROP TABLE IF EXISTS Victima;\
+    CREATE TABLE Ubicacion_Hospital(\
+        idUbicacion_Hospital INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\
+        direccion VARCHAR (80) NOT NULL\
+    );\
+    \
+    CREATE TABLE Tipo_Tratamiento(\
+        idTipo_Tratamiento INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\
+        descripcion_tipo VARCHAR (80) NOT NULL,\
+        efectividad_tipo_tratamiento INT NOT NULL\
+    );\
+    \
+    CREATE TABLE Persona(\
+        idPersona INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\
+        nombre VARCHAR (80) NOT NULL,\
+        apellido VARCHAR (80) NOT NULL\
+    );\
+    \
+    CREATE TABLE Victima(\
+        idVictima INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\
+        nombre VARCHAR (80) NOT NULL,\
+        apellido VARCHAR (80) NOT NULL,\
+        direccion_victima VARCHAR (80) NOT NULL,\
+        estatusEnfermedad	VARCHAR (80) NOT NULL,\
+        fecha_hora_fallecimiento DATETIME NULL\
+    );\
+    \
+    CREATE TABLE Contacto(\
+        idContacto INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\
+        idVictima INT NOT NULL,\
+        idPersona INT NOT NULL,\
+        FOREIGN KEY (idVictima) REFERENCES Victima (idVictima),\
+        FOREIGN KEY (idPersona) REFERENCES Persona (idPersona)\
+    );\
+    \
+    CREATE TABLE Detalle_Contacto(\
+        idDetalle_Contacto INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\
+        tipoContacto VARCHAR (80) NOT NULL,\
+        fecha_hora_inicio_contacto DATETIME NOT NULL,\
+        fecha_hora_fin_contacto DATETIME NOT NULL,\
+        fecha_conocio DATETIME NOT NULL,\
+        idContacto	INT NOT NULL,\
+        FOREIGN KEY (idContacto) REFERENCES Contacto (idContacto)\
+    );\
+    \
+    CREATE TABLE Tratamiento(\
+        idTratamiento INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\
+        efectividad_paciente INT NOT NULL,\
+        fechaInicioTratamiento DATETIME,\
+        fechaFinTratamiento DATETIME,\
+        idTipo_Tratamiento INT NOT NULL,\
+        idVictima INT NOT NULL,\
+        FOREIGN KEY (idTipo_Tratamiento) REFERENCES Tipo_Tratamiento (idTipo_Tratamiento),\
+        FOREIGN KEY (idVictima) REFERENCES Victima (idVictima)\
+    );\
+    \
+    CREATE TABLE Hospital(\
+        idHospital INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\
+        nombre_hospital VARCHAR (80) NOT NULL,\
+        idUbicacion_Hospital INT NOT NULL,\
+        FOREIGN KEY (idUbicacion_Hospital) REFERENCES Ubicacion_Hospital (idUbicacion_Hospital)\
+    );\
+    \
+    CREATE TABLE RegistroVictima(\
+        idRegistroVictima INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\
+        idVictima INT NOT NULL,\
+        fecha_hora_confirmacion DATETIME NULL,\
+        fecha_hora_registro DATETIME NULL,\
+        fecha_hora_fallecimiento DATETIME NULL,\
+        idHospital	INT NOT NULL,\
+        FOREIGN KEY (idHospital) REFERENCES Hospital (idHospital),\
+        FOREIGN KEY (idVictima) REFERENCES Victima (idVictima)\
+    );\
+    \
+    CREATE TABLE Ubicacion(\
+        idUbicacion INT NOT NULL AUTO_INCREMENT PRIMARY KEY,\
+        direccion VARCHAR (80) NOT NULL,\
+        fecha_hora_llegada DATETIME NOT NULL,\
+        fecha_hora_salida DATETIME NOT NULL,\
+        idRegistroVictima INT NOT NULL,\
+        FOREIGN KEY (idRegistroVictima) REFERENCES RegistroVictima (idRegistroVictima)\
+    );\
+    ";
+    return consulta;
+}
+
+function cargarModelo(){
+    var consulta = "INSERT INTO Persona(nombre,apellido)\
+    SELECT DISTINCT Temporal.NOMBRE_ASOCIADO, Temporal.APELLIDO_ASOCIADO\
+    FROM Temporal\
+    WHERE Temporal.NOMBRE_ASOCIADO != \"\" AND Temporal.APELLIDO_ASOCIADO != \"\";\
+    \
+    INSERT INTO Tipo_Tratamiento(descripcion_tipo, efectividad_tipo_tratamiento)\
+    SELECT DISTINCT Temporal.Tratamiento , Temporal.EFECTIVIDAD\
+    FROM Temporal\
+    WHERE Temporal.Tratamiento != \"\" AND Temporal.EFECTIVIDAD != 0;INSERT INTO Tipo_Tratamiento(descripcion_tipo, efectividad_tipo_tratamiento)\
+    SELECT DISTINCT Temporal.Tratamiento , Temporal.EFECTIVIDAD\
+    FROM Temporal\
+    WHERE Temporal.Tratamiento != \"\" AND Temporal.EFECTIVIDAD != 0;\
+    \
+    INSERT INTO Ubicacion_Hospital(direccion)\
+    SELECT DISTINCT Temporal.DIRECCION_HOSPITAL\
+    FROM Temporal\
+    WHERE Temporal.DIRECCION_HOSPITAL != \"\";\
+    \
+    INSERT INTO Victima (nombre,apellido,direccion_victima,estatusEnfermedad,fecha_hora_fallecimiento)\
+    SELECT DISTINCT Temporal.NOMBRE_VICTIMA,Temporal.APELLIDO_VICTIMA,Temporal.DIRECCION_VICTIMA,Temporal.ESTADO_VICTIMA ,Temporal.FECHA_MUERTE\
+    FROM Temporal\
+    WHERE Temporal.NOMBRE_VICTIMA != \"\" AND Temporal.APELLIDO_VICTIMA != \"\" AND Temporal.DIRECCION_VICTIMA != \"\" AND Temporal.ESTADO_VICTIMA != \"\";\
+    \
+    INSERT INTO Tratamiento (efectividad_paciente,fechaInicioTratamiento,fechaFinTratamiento,idTipo_Tratamiento,idVictima)\
+    SELECT DISTINCT Temporal.EFECTIVIDAD_EN_VICTIMA,Temporal.FECHA_INICIO_TRATAMIENTO,Temporal.FECHA_FIN_TRATAMIENTO ,Tipo_Tratamiento.idTipo_Tratamiento,Victima.idVictima  FROM Temporal\
+    INNER JOIN Victima ON Temporal.DIRECCION_VICTIMA = Victima.direccion_victima AND Temporal.NOMBRE_VICTIMA = Victima.nombre AND Temporal.APELLIDO_VICTIMA = Victima.apellido\
+    INNER JOIN Tipo_Tratamiento ON Temporal.TRATAMIENTO = Tipo_Tratamiento.descripcion_tipo;\
+    \
+    INSERT INTO Hospital (nombre_hospital, idUbicacion_Hospital)\
+    SELECT nombre , idUbicacion\
+    FROM(\
+    SELECT DISTINCT Temporal.NOMBRE_HOSPITAL AS nombre,Temporal.DIRECCION_HOSPITAL, Ubicacion_Hospital.idUbicacion_Hospital AS idUbicacion\
+    FROM Temporal\
+    INNER JOIN Ubicacion_Hospital ON  Temporal.DIRECCION_HOSPITAL = Ubicacion_Hospital.direccion\
+    WHERE Temporal.NOMBRE_HOSPITAL != \"\" AND Temporal.DIRECCION_HOSPITAL != \"\"\
+    )Nombres_Hospitales;\
+    \
+    INSERT INTO RegistroVictima(idVictima,fecha_hora_confirmacion,fecha_hora_registro,fecha_hora_fallecimiento,idHospital)\
+    SELECT idVictimaAg, fechaC,fechaR,fechaM,idHospitalAg\
+    FROM(\
+    SELECT DISTINCT Victima.idVictima AS idVictimaAg ,PRUEBA.idH AS idHospitalAg, Temporal.NOMBRE_VICTIMA , Temporal.APELLIDO_VICTIMA , Temporal.FECHA_CONFIRMACION AS fechaC,Temporal.FECHA_PRIMERA_SOSPECHA AS fechaR, Temporal.FECHA_MUERTE AS fechaM\
+    FROM Temporal\
+    INNER JOIN Victima ON Victima.nombre = Temporal.NOMBRE_VICTIMA AND Victima.apellido = Temporal.APELLIDO_VICTIMA\
+    INNER JOIN (\
+    SELECT Hospital.idHospital AS idH , Ubicacion_Hospital.idUbicacion_Hospital AS idUbi,Ubicacion_Hospital.direccion AS ubi,Hospital.nombre_hospital AS nomH\
+    FROM Hospital\
+    INNER JOIN Ubicacion_Hospital ON Hospital.idUbicacion_Hospital = Ubicacion_Hospital.idUbicacion_Hospital\
+    )PRUEBA ON Temporal.NOMBRE_HOSPITAL = nomH AND Temporal.DIRECCION_HOSPITAL = ubi\
+    )DATOS;\
+    \
+    INSERT INTO Ubicacion (direccion,fecha_hora_llegada,fecha_hora_salida,idRegistroVictima)\
+    SELECT DISTINCT  Temporal.UBICACION_VICTIMA,Temporal.FECHA_LLEGADA,\
+    Temporal.FECHA_RETIRO, DATOS_VICTIMA.idVic\
+    FROM Temporal\
+    INNER JOIN(\
+    SELECT RegistroVictima.idRegistroVictima AS idVic, Victima.nombre AS nomVic, Victima.apellido AS apeVic, Victima.direccion_victima AS dirVic\
+    FROM RegistroVictima\
+    INNER JOIN Victima ON RegistroVictima.idVictima = Victima.idVictima\
+    )DATOS_VICTIMA WHERE Temporal.NOMBRE_VICTIMA = nomVic AND Temporal.APELLIDO_VICTIMA = apeVic AND Temporal.DIRECCION_VICTIMA = dirVic AND Temporal.UBICACION_VICTIMA != \"\";\
+    \
+    INSERT INTO Contacto (idVictima,idPersona)\
+    SELECT ID_CONOCIDOS.victimaID,Persona.idPersona\
+    FROM Persona\
+    INNER JOIN (\
+    SELECT Victima.idVictima AS victimaID, Victima.nombre AS nombreVictima, CONOCIDOS.nAsociado AS nombAsociado, CONOCIDOS.apAsociado AS apeAsociado\
+    FROM Victima\
+    INNER JOIN(\
+    SELECT DISTINCT Temporal.NOMBRE_VICTIMA AS nVictima, Temporal.APELLIDO_VICTIMA AS apVictima, Temporal.DIRECCION_VICTIMA AS dirVictima,\
+    Temporal.NOMBRE_ASOCIADO AS nAsociado, Temporal.APELLIDO_ASOCIADO AS apAsociado , Temporal.FECHA_CONOCIO AS fecha\
+    FROM Temporal\
+    WHERE Temporal.NOMBRE_VICTIMA != \"\" AND Temporal.NOMBRE_ASOCIADO != \"\"\
+    )CONOCIDOS ON Victima.nombre = CONOCIDOS.nVictima AND Victima.apellido = CONOCIDOS.apVictima AND Victima.direccion_victima = CONOCIDOS.dirVictima\
+    )ID_CONOCIDOS ON Persona.nombre =  ID_CONOCIDOS.nombAsociado AND Persona.apellido = ID_CONOCIDOS.apeAsociado;\
+    \
+    INSERT INTO Detalle_Contacto (tipoContacto, fecha_hora_inicio_contacto, fecha_hora_fin_contacto,fecha_conocio,idContacto)\
+    SELECT DISTINCT Temporal.CONTACTO_FISICO,Temporal.FECHA_INICIO_CONTACTO,Temporal.FECHA_FIN_CONTACTO, Temporal.FECHA_CONOCIO,DETALLE_CONTACTO.idCont\
+    FROM Temporal\
+    INNER JOIN (\
+    SELECT Contacto.idContacto AS idCont, Victima.nombre AS nVictima ,Victima.apellido AS apVictima, Victima.direccion_victima AS dirVictima,\
+    Persona.nombre AS nAsociado , Persona.apellido AS apAsociado\
+    FROM Contacto\
+    INNER JOIN Victima ON Contacto.idVictima = Victima.idVictima\
+    INNER JOIN Persona ON Contacto.idPersona = Persona.idPersona\
+    )DETALLE_CONTACTO ON Temporal.NOMBRE_VICTIMA = DETALLE_CONTACTO.nVictima AND Temporal.APELLIDO_VICTIMA = DETALLE_CONTACTO.apVictima\
+    AND Temporal.DIRECCION_VICTIMA = DETALLE_CONTACTO.dirVictima AND Temporal.NOMBRE_ASOCIADO = DETALLE_CONTACTO.nAsociado\
+    AND Temporal.APELLIDO_ASOCIADO = DETALLE_CONTACTO.apAsociado AND Temporal.CONTACTO_FISICO != \"\";\
+    ";
+    return consulta;
+}
+
+function consulta1(){
+    //-- Mostrar el nombre del hospital, su dirección y el número de fallecidos por
+    //-- cada hospital registrado.
+    var consulta = "SELECT DATOS_FALLECIDOS_HOSPITAL.nombre,DATOS_FALLECIDOS_HOSPITAL.direccion,DATOS_FALLECIDOS_HOSPITAL.fallecidos\
+    FROM(\
+    SELECT Hospital.nombre_hospital AS nombre, Ubicacion_Hospital.direccion AS direccion , COUNT(RegistroVictima.fecha_hora_fallecimiento) as fallecidos\
+    FROM Hospital\
+    INNER JOIN Ubicacion_Hospital ON Hospital.idUbicacion_Hospital = Ubicacion_Hospital.idUbicacion_Hospital\
+    INNER JOIN RegistroVictima  ON Hospital.idHospital = RegistroVictima.idHospital\
+    GROUP BY nombre,direccion\
+    )DATOS_FALLECIDOS_HOSPITAL WHERE DATOS_FALLECIDOS_HOSPITAL.fallecidos > 0;";
+    return consulta;
+}
+
+function consulta2(){
+    var consulta = "SELECT Victima.nombre, Victima.apellido\
+    FROM Victima\
+    INNER JOIN Tratamiento ON Tratamiento.idVictima = Victima.idVictima\
+    INNER JOIN Tipo_Tratamiento ON Tratamiento.idTipo_Tratamiento = Tipo_Tratamiento.idTipo_Tratamiento\
+    WHERE Victima.estatusEnfermedad LIKE '%En Cuarentena%' AND Tipo_Tratamiento.descripcion_tipo LIKE '%Transfusiones de sangre%' AND Tratamiento.efectividad_paciente > 5;\
+    ";
+    return consulta;
+}
+
+function consulta3(){
+    var consulta = "SELECT DATOS_MUERTOS.nombre,DATOS_MUERTOS.apellido,DATOS_MUERTOS.direccion\
+    FROM(\
+    SELECT Victima.nombre AS nombre ,Victima.apellido AS apellido,Victima.direccion_victima AS direccion, Victima.fecha_hora_fallecimiento AS fechaF, COUNT(Contacto.idPersona) AS conteo\
+    FROM Victima\
+    INNER JOIN Contacto ON Victima.idVictima = Contacto.idVictima\
+    WHERE Victima.fecha_hora_fallecimiento is not null\
+    GROUP BY nombre,apellido,direccion,fechaF\
+    )DATOS_MUERTOS WHERE DATOS_MUERTOS.conteo > 3;\
+    ";
+    return consulta;
+}
+
+function consulta4(){
+    var consulta = "SELECT INFORMACION_CONTACTO.nombre , INFORMACION_CONTACTO.apellido\
+    FROM(\
+    SELECT Victima.nombre AS nombre,Victima.apellido AS apellido, COUNT(Contacto.idPersona)AS conteo\
+    FROM Victima\
+    INNER JOIN Contacto ON Victima.idVictima = Contacto.idVictima\
+    INNER JOIN Detalle_Contacto ON Contacto.idContacto = Detalle_Contacto.idContacto AND Detalle_Contacto.tipoContacto LIKE '%Beso%'\
+    WHERE Victima.estatusEnfermedad LIKE '%Sospecha%'\
+    GROUP BY nombre,apellido\
+    )INFORMACION_CONTACTO WHERE INFORMACION_CONTACTO.conteo > 2;\
+    ";
+    return consulta;
+}
+
+function consulta5(){
+    var consulta = "SELECT Nombre,Apellido,Direccion,Tratamiento,COUNT(idTratamiento) AS Cantidad\
+    FROM(\
+    SELECT Victima.nombre AS Nombre,Victima.apellido AS Apellido, Victima.direccion_victima AS Direccion,\
+    Tipo_Tratamiento.descripcion_tipo AS Tratamiento,Tratamiento.idTipo_Tratamiento AS idTratamiento\
+    FROM Victima\
+    INNER JOIN Tratamiento ON Victima.idVictima  = Tratamiento.idVictima\
+    INNER JOIN Tipo_Tratamiento ON Tratamiento.idTipo_Tratamiento = Tipo_Tratamiento.idTipo_Tratamiento\
+    )DATOS_TRATAMIENTOS WHERE Tratamiento LIKE 'Oxígeno'\
+    GROUP BY Nombre,Apellido,Direccion,Tratamiento\
+    ORDER BY Cantidad DESC\
+    LIMIT 5;\
+    ";
+    return consulta;
+}
+
+function consulta6(){
+    var consulta = "SELECT DISTINCT DATOS_VICTIMA.nombre,DATOS_VICTIMA.apellido\
+    FROM Ubicacion\
+    INNER JOIN(\
+    SELECT RegistroVictima.idRegistroVictima AS registroVictima, Victima.nombre AS nombre, Victima.apellido AS apellido\
+    FROM Victima\
+    INNER JOIN Tratamiento ON Victima.idVictima = Tratamiento.idVictima\
+    INNER JOIN Tipo_Tratamiento ON Tratamiento.idTipo_Tratamiento = Tipo_Tratamiento.idTipo_Tratamiento AND Tipo_Tratamiento.descripcion_tipo LIKE '%Manejo de la presión arterial%'\
+    INNER JOIN RegistroVictima ON Victima.idVictima = RegistroVictima.idVictima\
+    WHERE Victima.fecha_hora_fallecimiento is not null\
+    )DATOS_VICTIMA WHERE DATOS_VICTIMA.registroVictima = Ubicacion.idRegistroVictima AND Ubicacion.direccion LIKE '%1987 Delphine Well%';\
+    ";
+    return consulta;
+}
+
+function consulta7(){
+    var consulta = "SELECT Victima.nombre,Victima.apellido,Victima.direccion_victima\
+    FROM ((Contacto\
+    INNER JOIN Victima ON Contacto.idVictima = Victima.idVictima)\
+    INNER JOIN Persona ON Contacto.idPersona = Persona.idPersona)\
+    INNER JOIN(\
+    SELECT Victima.nombre , Victima.apellido\
+    FROM Contacto\
+    INNER JOIN Persona ON Contacto.idPersona = Persona.idPersona\
+    INNER JOIN Victima ON Victima.nombre = Persona.nombre AND Victima.apellido = Persona.apellido\
+    INNER JOIN RegistroVictima ON RegistroVictima.idVictima = Victima.idVictima\
+    INNER JOIN Tratamiento ON Tratamiento.idVictima = Victima.idVictima\
+    GROUP BY Victima.idVictima\
+    HAVING COUNT(Victima.idVictima) = 2\
+    ) AS Datos_Asociado ON Datos_Asociado.nombre = Persona.nombre AND Datos_Asociado.apellido = Persona.apellido\
+    GROUP BY Victima.idVictima\
+    HAVING COUNT(Victima.idVictima) < 2;\
+    ";
+    return consulta;
+}
+
+function consulta8(){
+    var consulta = "SELECT MAYOR.MES,MAYOR.NOMBRE,MAYOR.APELLIDO,MAYOR.CONTEO\
+    FROM(\
+    SELECT MONTH(RegistroVictima.fecha_hora_registro) AS MES, Victima.nombre AS NOMBRE, Victima.apellido AS APELLIDO, COUNT(Tratamiento.idVictima) AS CONTEO\
+    FROM Victima\
+    INNER JOIN RegistroVictima ON Victima.idVictima = RegistroVictima.idVictima\
+    INNER JOIN Tratamiento ON Victima.idVictima = Tratamiento.idVictima\
+    GROUP BY MES,NOMBRE,APELLIDO\
+    ORDER BY CONTEO DESC\
+    LIMIT 5\
+    )MAYOR\
+    \
+    UNION ALL\
+    \
+    SELECT MENOR.MES,MENOR.NOMBRE,MENOR.APELLIDO,MENOR.CONTEO\
+    FROM(\
+    SELECT MONTH(RegistroVictima.fecha_hora_registro) AS MES, Victima.nombre AS NOMBRE, Victima.apellido AS APELLIDO, COUNT(Tratamiento.idVictima) AS CONTEO\
+    FROM Victima\
+    INNER JOIN RegistroVictima ON Victima.idVictima = RegistroVictima.idVictima\
+    INNER JOIN Tratamiento ON Victima.idVictima = Tratamiento.idVictima\
+    GROUP BY MES,NOMBRE,APELLIDO\
+    ORDER BY CONTEO ASC\
+    LIMIT 5\
+    )MENOR;\
+    ";
+    return consulta;
+}
+
+function consulta9(){
+    var consulta = "SELECT Hospital.nombre_hospital AS HOSPITAL,\
+	COUNT(RegistroVictima.idVictima)/ \
+    (SELECT SUM(TOTAL_VICTIMAS.T_VICTIMAS)\
+	FROM(\
+		SELECT COUNT(RegistroVictima.idVictima) AS T_VICTIMAS\
+		FROM RegistroVictima\
+		INNER JOIN Hospital ON RegistroVictima.idHospital = Hospital.idHospital\
+		GROUP BY Hospital.idHospital\
+	)TOTAL_VICTIMAS) * 100 AS PORCENTAJE\
+    FROM RegistroVictima\
+    INNER JOIN Hospital ON RegistroVictima.idHospital = Hospital.idHospital\
+    GROUP BY Hospital.idHospital\
+    ";
+    return consulta;
 }
 
 

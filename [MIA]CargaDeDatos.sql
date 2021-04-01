@@ -1,17 +1,11 @@
 USE GVE;
--- SELECT * FROM Temporal;
-/*------------------------------ PARA CARGAR VALORES  ------------------------------*/
-/*
+
 -- //PARA PERSONAS
 
 INSERT INTO Persona(nombre,apellido)
 SELECT DISTINCT Temporal.NOMBRE_ASOCIADO, Temporal.APELLIDO_ASOCIADO
 FROM Temporal
 WHERE Temporal.NOMBRE_ASOCIADO != "" AND Temporal.APELLIDO_ASOCIADO != "";
--- 500 personas
-
-
--- select * from Persona;
 
 -- //PARA TIPOS DE TRATAMIENTO
 
@@ -19,9 +13,6 @@ INSERT INTO Tipo_Tratamiento(descripcion_tipo, efectividad_tipo_tratamiento)
 SELECT DISTINCT Temporal.Tratamiento , Temporal.EFECTIVIDAD
 FROM Temporal
 WHERE Temporal.Tratamiento != "" AND Temporal.EFECTIVIDAD != 0;
--- 5 Tratamientos
-
--- select * from Tipo_Tratamiento;
 
 -- //PARA UBICACION DE HOSPITAL
 
@@ -29,7 +20,6 @@ INSERT INTO Ubicacion_Hospital(direccion)
 SELECT DISTINCT Temporal.DIRECCION_HOSPITAL
 FROM Temporal
 WHERE Temporal.DIRECCION_HOSPITAL != "";
--- 56 ubicaciones
 
 -- //PARA VICTIMAS DE HOSPITAL
 
@@ -37,9 +27,6 @@ INSERT INTO Victima (nombre,apellido,direccion_victima,estatusEnfermedad,fecha_h
 SELECT DISTINCT Temporal.NOMBRE_VICTIMA,Temporal.APELLIDO_VICTIMA,Temporal.DIRECCION_VICTIMA,Temporal.ESTADO_VICTIMA ,Temporal.FECHA_MUERTE
 FROM Temporal
 WHERE Temporal.NOMBRE_VICTIMA != "" AND Temporal.APELLIDO_VICTIMA != "" AND Temporal.DIRECCION_VICTIMA != "" AND Temporal.ESTADO_VICTIMA != "";
--- 1000 Victimas
-
--- select * from Victima;
 
 -- //PARA TRATAMIENTO
 
@@ -47,8 +34,6 @@ INSERT INTO Tratamiento (efectividad_paciente,fechaInicioTratamiento,fechaFinTra
 SELECT DISTINCT Temporal.EFECTIVIDAD_EN_VICTIMA,Temporal.FECHA_INICIO_TRATAMIENTO,Temporal.FECHA_FIN_TRATAMIENTO ,Tipo_Tratamiento.idTipo_Tratamiento,Victima.idVictima  FROM Temporal
 INNER JOIN Victima ON Temporal.DIRECCION_VICTIMA = Victima.direccion_victima AND Temporal.NOMBRE_VICTIMA = Victima.nombre AND Temporal.APELLIDO_VICTIMA = Victima.apellido
 INNER JOIN Tipo_Tratamiento ON Temporal.TRATAMIENTO = Tipo_Tratamiento.descripcion_tipo;
--- 567 Tratamientos
-
 
 -- //PARA HOSPITALES
 
@@ -61,8 +46,8 @@ INNER JOIN Ubicacion_Hospital ON  Temporal.DIRECCION_HOSPITAL = Ubicacion_Hospit
 WHERE Temporal.NOMBRE_HOSPITAL != "" AND Temporal.DIRECCION_HOSPITAL != ""
 )Nombres_Hospitales;
 
-
 -- //PARA REGISTRO VICTIMA
+
 INSERT INTO RegistroVictima(idVictima,fecha_hora_confirmacion,fecha_hora_registro,fecha_hora_fallecimiento,idHospital)
 SELECT idVictimaAg, fechaC,fechaR,fechaM,idHospitalAg
 FROM(
@@ -76,7 +61,6 @@ INNER JOIN Ubicacion_Hospital ON Hospital.idUbicacion_Hospital = Ubicacion_Hospi
 )PRUEBA ON Temporal.NOMBRE_HOSPITAL = nomH AND Temporal.DIRECCION_HOSPITAL = ubi
 )DATOS;
 
-
 -- PARA UBICACION
 
 INSERT INTO Ubicacion (direccion,fecha_hora_llegada,fecha_hora_salida,idRegistroVictima)
@@ -89,6 +73,8 @@ FROM RegistroVictima
 INNER JOIN Victima ON RegistroVictima.idVictima = Victima.idVictima
 )DATOS_VICTIMA WHERE Temporal.NOMBRE_VICTIMA = nomVic AND Temporal.APELLIDO_VICTIMA = apeVic AND Temporal.DIRECCION_VICTIMA = dirVic AND Temporal.UBICACION_VICTIMA != ""
 ;
+
+-- PARA CONTACTO
 
 INSERT INTO Contacto (idVictima,idPersona)
 SELECT ID_CONOCIDOS.victimaID,Persona.idPersona
@@ -105,7 +91,8 @@ WHERE Temporal.NOMBRE_VICTIMA != "" AND Temporal.NOMBRE_ASOCIADO != ""
 )ID_CONOCIDOS ON Persona.nombre =  ID_CONOCIDOS.nombAsociado AND Persona.apellido = ID_CONOCIDOS.apeAsociado ;
 
 
--- DETALLE CONTACTO
+-- PARA DETALLE CONTACTO
+
 INSERT INTO Detalle_Contacto (tipoContacto, fecha_hora_inicio_contacto, fecha_hora_fin_contacto,fecha_conocio,idContacto)
 SELECT DISTINCT Temporal.CONTACTO_FISICO,Temporal.FECHA_INICIO_CONTACTO,Temporal.FECHA_FIN_CONTACTO, Temporal.FECHA_CONOCIO,DETALLE_CONTACTO.idCont
 FROM Temporal 
@@ -118,18 +105,4 @@ INNER JOIN Persona ON Contacto.idPersona = Persona.idPersona
 )DETALLE_CONTACTO ON Temporal.NOMBRE_VICTIMA = DETALLE_CONTACTO.nVictima AND Temporal.APELLIDO_VICTIMA = DETALLE_CONTACTO.apVictima 
 AND Temporal.DIRECCION_VICTIMA = DETALLE_CONTACTO.dirVictima AND Temporal.NOMBRE_ASOCIADO = DETALLE_CONTACTO.nAsociado 
 AND Temporal.APELLIDO_ASOCIADO = DETALLE_CONTACTO.apAsociado AND Temporal.CONTACTO_FISICO != "";
-*/
 
-/*
-SELECT DISTINCT Temporal.NOMBRE_VICTIMA,Temporal.NOMBRE_ASOCIADO,Temporal.CONTACTO_FISICO, Temporal.FECHA_INICIO_CONTACTO,
-Temporal.FECHA_FIN_CONTACTO, Temporal.FECHA_CONOCIO, Contacto.idContacto
-FROM Contacto
-INNER JOIN Victima on Contacto.idVictima = Victima.idVictima
-INNER JOIN Persona on Contacto.idPersona = Persona.idPersona
-INNER JOIN Temporal on Victima.nombre = Temporal.NOMBRE_VICTIMA AND Victima.apellido = Temporal.APELLIDO_VICTIMA
-AND Persona.nombre = Temporal.NOMBRE_ASOCIADO AND Persona.apellido = Temporal.APELLIDO_ASOCIADO
-WHERE Temporal.CONTACTO_FISICO != "" AND Temporal.FECHA_CONOCIO is not null
-;*/
-
-
--- SELECT * FROM Detalle_Contacto;
