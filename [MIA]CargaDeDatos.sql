@@ -33,7 +33,8 @@ WHERE Temporal.NOMBRE_VICTIMA != "" AND Temporal.APELLIDO_VICTIMA != "" AND Temp
 INSERT INTO Tratamiento (efectividad_paciente,fechaInicioTratamiento,fechaFinTratamiento,idTipo_Tratamiento,idVictima)
 SELECT DISTINCT Temporal.EFECTIVIDAD_EN_VICTIMA,Temporal.FECHA_INICIO_TRATAMIENTO,Temporal.FECHA_FIN_TRATAMIENTO ,Tipo_Tratamiento.idTipo_Tratamiento,Victima.idVictima  FROM Temporal
 INNER JOIN Victima ON Temporal.DIRECCION_VICTIMA = Victima.direccion_victima AND Temporal.NOMBRE_VICTIMA = Victima.nombre AND Temporal.APELLIDO_VICTIMA = Victima.apellido
-INNER JOIN Tipo_Tratamiento ON Temporal.TRATAMIENTO = Tipo_Tratamiento.descripcion_tipo;
+INNER JOIN Tipo_Tratamiento ON Temporal.TRATAMIENTO = Tipo_Tratamiento.descripcion_tipo
+WHERE Temporal.TRATAMIENTO != "";
 
 -- //PARA HOSPITALES
 

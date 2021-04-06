@@ -11,14 +11,14 @@ FROM Hospital
 INNER JOIN Ubicacion_Hospital ON Hospital.idUbicacion_Hospital = Ubicacion_Hospital.idUbicacion_Hospital
 INNER JOIN RegistroVictima  ON Hospital.idHospital = RegistroVictima.idHospital
 GROUP BY nombre,direccion
-)DATOS_FALLECIDOS_HOSPITAL WHERE DATOS_FALLECIDOS_HOSPITAL.fallecidos > 0 
+)DATOS_FALLECIDOS_HOSPITAL WHERE DATOS_FALLECIDOS_HOSPITAL.fallecidos > 0; 
 
 
 /*CONSULTA 2 - 6*/
 
 -- Mostrar el nombre, apellido de todas las víctimas en cuarentena que
 -- presentaron una efectividad mayor a 5 en el tratamiento “Transfusiones de
--- sangre”.
+-- sangre”
 
 SELECT Victima.nombre, Victima.apellido
 FROM Victima
@@ -113,6 +113,25 @@ HAVING COUNT(Victima.idVictima) = 2
 GROUP BY Victima.idVictima
 HAVING COUNT(Victima.idVictima) < 2;
 
+-- Mostrar nombre, apellido y dirección de las víctimas que tienen menos de 2
+-- allegados los cuales hayan estado en un hospital y que se le hayan aplicado
+-- únicamente dos tratamientos.
+
+SELECT Victima.nombre , Victima.apellido , Victima.direccion_victima
+FROM Victima
+INNER JOIN RegistroVictima ON RegistroVictima.idVictima = Victima.idVictima
+INNER JOIN (
+	SELECT Contacto.idVictima, COUNT(Contacto.idVictima) AS asociados
+    FROM Contacto
+    GROUP BY Contacto.idVictima
+)AS conteo_asociados ON conteo_asociados.idVictima = Victima.idVictima
+INNER JOIN(
+	SELECT Tratamiento.idVictima, COUNT(Tratamiento.idVictima) AS tratamiento
+    FROM Tratamiento
+    GROUP BY Tratamiento.idVictima
+)AS conteo_tratamiento ON conteo_tratamiento.idVictima = Victima.idVictima
+WHERE conteo_asociados.asociados < 2 AND conteo_tratamiento.tratamiento = 2;
+
 /*CONSULTA 8*/
 
 -- Mostrar el número de mes ,de la fecha de la primera sospecha, nombre y
@@ -162,7 +181,7 @@ SELECT Hospital.nombre_hospital AS HOSPITAL,
 	)TOTAL_VICTIMAS) * 100 AS PORCENTAJE
 FROM RegistroVictima
 INNER JOIN Hospital ON RegistroVictima.idHospital = Hospital.idHospital
-GROUP BY Hospital.idHospital
+GROUP BY Hospital.idHospital;
 
 
 /*CONSULTA 10*/
@@ -170,19 +189,13 @@ GROUP BY Hospital.idHospital
 -- siguiente manera: nombre de hospital, nombre del contacto físico, porcentaje
 -- de víctimas.
 
-/*
-	SELECT Hospital.idHospital , Detalle_Contacto.tipoContacto , COUNT(Detalle_Contacto.tipoContacto)
+	SELECT Hospital.idHospital,Hospital.nombre_hospital , Detalle_Contacto.tipoContacto, COUNT(Detalle_Contacto.tipoContacto) AS Cantidad
 	FROM Hospital
 	INNER JOIN RegistroVictima ON RegistroVictima.idHospital  = Hospital.idHospital
 	INNER JOIN Victima ON RegistroVictima.idVictima = Victima.idVictima
 	INNER JOIN Contacto ON Victima.idVictima = Contacto.idVictima
 	INNER JOIN Detalle_Contacto ON Contacto.idContacto = Detalle_Contacto.idContacto
-	GROUP BY Hospital.idHospital , Detalle_Contacto.tipoContacto
+	GROUP BY Hospital.idHospital ,Nombre, Detalle_Contacto.tipoContacto
 	ORDER BY Hospital.idHospital ASC
 
-	SELECT Hospital.nombre_hospital , Detalle_Contacto.tipoContacto
-	FROM Contacto
-	INNER JOIN Detalle_Contacto ON Detalle_Contacto.idContacto = Contacto.idContacto
-	INNER JOIN RegistroVictima ON RegistroVictima.idVictima = Contacto.idVictima
-	INNER JOIN Hospital	ON Hospital.idHospital = RegistroVictima.idHospital
-*/    
+	

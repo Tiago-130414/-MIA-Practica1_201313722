@@ -127,7 +127,14 @@ api.get("/consulta9",(req,res)=>{
 
 //CONSULTA 10
 api.get("/consulta10",(req,res)=>{
-    res.json({"Title":"Consulta 10"});
+    var consulta = consulta10();
+    connection.query(consulta, function (err, result) {
+        if(err){
+           res.end(JSON.stringify({"Error" : "Problema al ejecutar consulta 10"},null,2));
+        }else{
+           res.end(JSON.stringify(result,null,2));
+        }
+    });  
 });
 
 //ELIMINAR TEMPORAL
@@ -395,9 +402,6 @@ function cargarModelo(){
     INSERT INTO Tipo_Tratamiento(descripcion_tipo, efectividad_tipo_tratamiento)\
     SELECT DISTINCT Temporal.Tratamiento , Temporal.EFECTIVIDAD\
     FROM Temporal\
-    WHERE Temporal.Tratamiento != \"\" AND Temporal.EFECTIVIDAD != 0;INSERT INTO Tipo_Tratamiento(descripcion_tipo, efectividad_tipo_tratamiento)\
-    SELECT DISTINCT Temporal.Tratamiento , Temporal.EFECTIVIDAD\
-    FROM Temporal\
     WHERE Temporal.Tratamiento != \"\" AND Temporal.EFECTIVIDAD != 0;\
     \
     INSERT INTO Ubicacion_Hospital(direccion)\
@@ -560,23 +564,22 @@ function consulta6(){
 }
 
 function consulta7(){
-    var consulta = "SELECT Victima.nombre,Victima.apellido,Victima.direccion_victima\
-    FROM ((Contacto\
-    INNER JOIN Victima ON Contacto.idVictima = Victima.idVictima)\
-    INNER JOIN Persona ON Contacto.idPersona = Persona.idPersona)\
-    INNER JOIN(\
-    SELECT Victima.nombre , Victima.apellido\
-    FROM Contacto\
-    INNER JOIN Persona ON Contacto.idPersona = Persona.idPersona\
-    INNER JOIN Victima ON Victima.nombre = Persona.nombre AND Victima.apellido = Persona.apellido\
+    var consulta = "SELECT Victima.nombre , Victima.apellido , Victima.direccion_victima\
+    FROM Victima\
     INNER JOIN RegistroVictima ON RegistroVictima.idVictima = Victima.idVictima\
-    INNER JOIN Tratamiento ON Tratamiento.idVictima = Victima.idVictima\
-    GROUP BY Victima.idVictima\
-    HAVING COUNT(Victima.idVictima) = 2\
-    ) AS Datos_Asociado ON Datos_Asociado.nombre = Persona.nombre AND Datos_Asociado.apellido = Persona.apellido\
-    GROUP BY Victima.idVictima\
-    HAVING COUNT(Victima.idVictima) < 2;\
+    INNER JOIN (\
+        SELECT Contacto.idVictima, COUNT(Contacto.idVictima) AS asociados\
+        FROM Contacto\
+        GROUP BY Contacto.idVictima\
+    )AS conteo_asociados ON conteo_asociados.idVictima = Victima.idVictima\
+    INNER JOIN(\
+        SELECT Tratamiento.idVictima, COUNT(Tratamiento.idVictima) AS tratamiento\
+        FROM Tratamiento\
+        GROUP BY Tratamiento.idVictima\
+    )AS conteo_tratamiento ON conteo_tratamiento.idVictima = Victima.idVictima\
+    WHERE conteo_asociados.asociados < 2 AND conteo_tratamiento.tratamiento = 2\
     ";
+
     return consulta;
 }
 
@@ -623,6 +626,19 @@ function consulta9(){
     GROUP BY Hospital.idHospital\
     ";
     return consulta;
+}
+
+function consulta10(){
+   var consulta = "SELECT Hospital.idHospital,Hospital.nombre_hospital , Detalle_Contacto.tipoContacto, COUNT(Detalle_Contacto.tipoContacto) AS Cantidad\
+	FROM Hospital\
+	INNER JOIN RegistroVictima ON RegistroVictima.idHospital  = Hospital.idHospital\
+	INNER JOIN Victima ON RegistroVictima.idVictima = Victima.idVictima\
+	INNER JOIN Contacto ON Victima.idVictima = Contacto.idVictima\
+	INNER JOIN Detalle_Contacto ON Contacto.idContacto = Detalle_Contacto.idContacto\
+	GROUP BY Hospital.idHospital ,Nombre, Detalle_Contacto.tipoContacto\
+	ORDER BY Hospital.idHospital ASC\
+   "; 
+   return consulta;
 }
 
 

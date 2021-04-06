@@ -51,8 +51,8 @@ CREATE TABLE Detalle_Contacto(
 CREATE TABLE Tratamiento(
 	idTratamiento INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     efectividad_paciente INT NOT NULL,
-    fechaInicioTratamiento DATETIME,
-    fechaFinTratamiento DATETIME,
+    fechaInicioTratamiento DATETIME NOT NULL,
+    fechaFinTratamiento DATETIME NOT NULL,
     idTipo_Tratamiento INT NOT NULL,
     idVictima INT NOT NULL,
     FOREIGN KEY (idTipo_Tratamiento) REFERENCES Tipo_Tratamiento (idTipo_Tratamiento),
